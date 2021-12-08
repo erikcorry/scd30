@@ -2,7 +2,7 @@
 
 Driver for the [SCD30 sensor](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensors-scd30/).
 
-## Connect the sensor
+## Usage
 
 The ESP32 pin connection to the SCD30 sensor is as follows:
 
@@ -11,6 +11,20 @@ The ESP32 pin connection to the SCD30 sensor is as follows:
 - 3.3V > 3V
 - GND > GND
 
-## Install the driver via the Toit Package Registry
+`import scd30
 
-toit pkg install github.com/qvisten999/scd30
+main:
+...
+`
+
+See the `examples` folder for more examples
+
+Installation: `toit pkg install github.com/qvisten999/scd30`
+
+## References
+
+[Datasheet](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensors-scd30/)
+
+## Features and bugs
+
+Use the [issue tracker](https://github.com/qvisten999/scd30/issues/) if you find bugs or missing features.

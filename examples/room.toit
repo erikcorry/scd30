@@ -4,7 +4,7 @@
 
 import gpio
 import i2c
-import .scd30
+import ..src.scd30
 
 co2_level_ := 0.0
 
