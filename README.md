@@ -11,11 +11,12 @@ The ESP32 pin connection to the SCD30 sensor is as follows:
 - 3.3V > 3V
 - GND > GND
 
-`import scd30
+```
+import scd30
 
 main:
-...
-`
+    ...
+```
 
 See the `examples` folder for more examples
 
