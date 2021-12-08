@@ -13,4 +13,4 @@ The ESP32 pin connection to the SCD30 sensor is as follows:
 
 ## Install the driver via the Toit Package Registry
 
-toit pkg install github.com/toitware/bme280-driver
+toit pkg install github.com/qvisten999/scd30
