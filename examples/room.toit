@@ -2,6 +2,17 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
+/**
+Small example to show the use of the CO2 sensor.
+
+The ESP32 pin connection to the SCD30 sensor is as follows:
+
+- GPIO21 > SDA
+- GPIO22 > SCL
+- 3.3V > 3V
+- GND > GND
+*/
+
 import gpio
 import i2c
 import ..src.scd30
