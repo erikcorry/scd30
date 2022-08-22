@@ -67,7 +67,7 @@ class Scd30:
     humidity_data := data[12..14] + data[15..17]
     humidity := binary.BIG_ENDIAN.float32 humidity_data 0
 
-    return Measurements co2 temperature humidity
+    return Measurements co2 humidity temperature
 
   /**
   Checks checksum and throws if wrong.
