@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Toitware ApS. All rights reserved.
+// Copyright (C) 2022 Toitware ApS. All rights reserved.
 // Use of this source code is governed by an MIT-style license that can be
 // found in the LICENSE file.
 
@@ -21,11 +21,20 @@ class Scd30:
   // Available commands.
   static COMMAND_GET_DATA_READY_ ::= #[0x02, 0x02]
   static COMMAND_READ_MEASUREMENT_ ::= #[0x03, 0x00]
+  static COMMAND_SET_CONTINUOUS_AND_PRESSURE_ ::= #[0x00, 0x10]
 
-  device_/serial.Device ::= ?
+  device_/serial.Device
+  pressure_/int := ?
 
-  constructor device/serial.Device:
+  /**
+  Creates a driver and initializes the ambient pressure (in millibar
+    or hectopascal).
+  */
+  constructor device/serial.Device --pressure/int=1013:
     device_ = device
+    if not 0 < pressure < 0x10000: throw "OUT_OF_RANGE"
+    pressure_ = pressure
+    set_pressure_
 
   /**
   Returns whether data is ready.
@@ -41,6 +50,20 @@ class Scd30:
     for i := 0; not is_ready_; i++:
       if i == 100: throw "Device is not getting ready."
       sleep --ms=20
+
+  pressure= value/int:
+    pressure_ = value
+    set_pressure_
+
+  set_pressure_ -> none:
+    // Set continuous mode with the given (or default) air pressure.
+    pressure_bytes := ByteArray 2
+    binary.BIG_ENDIAN.put_int16 pressure_bytes 0 pressure_
+    command := COMMAND_SET_CONTINUOUS_AND_PRESSURE_ + pressure_bytes + #[compute_crc8_ pressure_bytes]
+    device_.write command
+
+  pressure -> int:
+    return pressure_
 
   /**
   Reads the measurements from the sensor.

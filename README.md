@@ -4,7 +4,7 @@ Driver for the Sensirion SCD30 sensor module, for monitoring CO2, temperature, a
 
 ## Usage
 
-Installation: `toit pkg install github.com/qvisten999/scd30`
+Installation: `toit.pkg install github.com/qvisten999/scd30`
 
 ```
 import scd30
