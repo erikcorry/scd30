@@ -1,0 +1,5 @@
+prefixes:
+  scd30: ..
+packages:
+  ..:
+    path: ..
