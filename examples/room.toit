@@ -27,6 +27,8 @@ main:
   device := bus.device Scd30.I2C_ADDRESS
   scd30 := Scd30 device
 
+  sleep --ms=5000  // In case continuous measurement mode was not activated.
+
   while true:
     reading := scd30.read
     if reading.co2 > 2000:

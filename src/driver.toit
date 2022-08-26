@@ -25,10 +25,17 @@ class Scd30:
 
   device_/serial.Device
   pressure_/int := ?
+  continuous_mode_/bool := true
 
   /**
-  Creates a driver and initializes the ambient pressure (in millibar
-    or hectopascal).
+  Creates a driver and initializes the ambient pressure calibration
+    (in millibar or hectopascal).
+  The device is initially in continuous measurement mode, but this
+    can be switched with the setter `driver.continuous_mode = false`.
+  If continuous measurement was previously disabled there is a delay
+    of a few seconds after running this constructor before the device
+    is ready to provide measurements.  Reading too early can throw
+    write exceptions.
   */
   constructor device/serial.Device --pressure/int=1013:
     device_ = device
@@ -51,9 +58,40 @@ class Scd30:
       if i == 100: throw "Device is not getting ready."
       sleep --ms=20
 
+  /**
+  Gets ambient pressure calibration in millibar or hectopascal.
+  The device does not measure pressure.  This getter merely
+    retrieves the value that is used to calibrate the other
+    measurements.
+  */
+  pressure -> int:
+    return pressure_
+
+  /**
+  Sets the ambient pressure in millibar or hectopascal.
+  If the device is not in continuous measurement mode then the
+    change takes effect when continuous measurement mode is enabled.
+  */
   pressure= value/int:
     pressure_ = value
-    set_pressure_
+    if continuous_mode_:
+      set_pressure_
+
+  continuous_mode -> bool:
+    return continuous_mode_
+
+  /**
+  Activates or deactivates continuous mode.  When continuous mode is
+    activated there is a delay of a few seconds before the device is
+    ready to provide measurements.  Reading too early can throw write
+    exceptions.
+  */
+  continuous_mode= value/bool:
+    continuous_mode_ = value
+    if value:
+      set_pressure_
+    else:
+      device_.write #[0x01, 0x04]
 
   set_pressure_ -> none:
     // Set continuous mode with the given (or default) air pressure.
@@ -61,9 +99,6 @@ class Scd30:
     binary.BIG_ENDIAN.put_int16 pressure_bytes 0 pressure_
     command := COMMAND_SET_CONTINUOUS_AND_PRESSURE_ + pressure_bytes + #[compute_crc8_ pressure_bytes]
     device_.write command
-
-  pressure -> int:
-    return pressure_
 
   /**
   Reads the measurements from the sensor.
